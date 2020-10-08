@@ -9,6 +9,7 @@ package sparkle
 /*
 #cgo CFLAGS: -I ${SRCDIR}/Sparkle.framework
 #cgo LDFLAGS: -F ${SRCDIR} -framework Sparkle -framework Foundation
+#//cgo LDFLAGS: -Wl,-rpath,@executable_path/../Frameworks
 
 #include <stdlib.h>
 
@@ -48,6 +49,10 @@ double getLastUpdateCheckDate();
 void resetUpdateCycle();
 
 int getUpdateInProgress();
+
+
+// typedef int (*updaterMayCheckForUpdatesCallback_t)();
+// void setUpdaterMayCheckForUpdates();
 
 */
 import "C"
@@ -257,3 +262,7 @@ func ResetUpdateCycle() {
 func GetUpdateInProgress() bool {
 	return C.getAutomaticallyChecksForUpdates() != 0
 }
+
+// func SetUpdaterMayCheckForUpdates() {
+// 	C.setUpdaterMayCheckForUpdates()
+// }
