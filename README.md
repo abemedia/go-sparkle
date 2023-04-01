@@ -17,8 +17,8 @@ See the [GoDoc](https://pkg.go.dev/github.com/abemedia/go-sparkle?tab=doc) and
 
 ## Getting started
 
-Download the latest version of the Sparkle framework from
-<https://github.com/sparkle-project/Sparkle/releases/latest> and move the
+Download the Sparkle framework from
+<https://github.com/sparkle-project/Sparkle/releases/2.4.0> and move the
 `Sparkle.framework` directory from the archive into your bundle's `Frameworks`
 directory (e.g. `YourBundle.app/Contents/Frameworks/`).
 
