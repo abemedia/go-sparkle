@@ -12,22 +12,28 @@
 // This list should include the shared headers. It doesn't matter if some of them aren't shared (unless
 // there are name-space collisions) so we can list all of them to start with:
 
-#import "SUAppcast.h"
-#import "SUAppcastItem.h"
-#import "SUStandardVersionComparator.h"
-#import "SUUpdater.h"
-#import "SUUpdaterDelegate.h"
-#import "SUVersionComparisonProtocol.h"
-#import "SUVersionDisplayProtocol.h"
-#import "SUErrors.h"
+#import <Sparkle/SUExport.h>
+#import <Sparkle/SUAppcast.h>
+#import <Sparkle/SUAppcastItem.h>
+#import <Sparkle/SUStandardVersionComparator.h>
+#import <Sparkle/SPUUpdater.h>
+#import <Sparkle/SPUUpdaterDelegate.h>
+#import <Sparkle/SPUUpdaterSettings.h>
+#import <Sparkle/SUVersionComparisonProtocol.h>
+#import <Sparkle/SUVersionDisplayProtocol.h>
+#import <Sparkle/SUErrors.h>
+#import <Sparkle/SPUUpdatePermissionRequest.h>
+#import <Sparkle/SUUpdatePermissionResponse.h>
+#import <Sparkle/SPUUserDriver.h>
+#import <Sparkle/SPUDownloadData.h>
 
-#import "SPUDownloader.h"
-#import "SPUDownloaderDelegate.h"
-#import "SPUDownloaderDeprecated.h"
-#import "SPUDownloadData.h"
-#import "SPUDownloaderProtocol.h"
-#import "SPUDownloaderSession.h"
-#import "SPUURLRequest.h"
-#import "SUCodeSigningVerifier.h"
+// UI bits
+#import <Sparkle/SPUStandardUpdaterController.h>
+#import <Sparkle/SPUStandardUserDriver.h>
+#import <Sparkle/SPUStandardUserDriverDelegate.h>
+
+// Deprecated bits
+#import <Sparkle/SUUpdater.h>
+#import <Sparkle/SUUpdaterDelegate.h>
 
 #endif

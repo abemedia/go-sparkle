@@ -1,6 +1,7 @@
+//go:build darwin
 // +build darwin
 
-// Package winsparkle provides go bindings for WinSparkle.
+// Package sparkle provides go bindings for Sparkle.
 //
 // Sparkle is a secure and reliable software update framework for Cocoa developers.
 // See https://github.com/sparkle-project/Sparkle for more info.
@@ -40,8 +41,6 @@ int getSendsSystemProfile();
 
 void setDecryptionPassword(const char*);
 const char* getDecryptionPassword();
-
-void installUpdatesIfAvailable();
 
 double getLastUpdateCheckDate();
 
@@ -206,36 +205,6 @@ func SetDecryptionPassword(url string) {
 // Returns the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
 func GetDecryptionPassword() string {
 	return C.GoString(C.getDecryptionPassword())
-}
-
-// This function ignores normal update schedule, ignores user preferences,
-// and interrupts users with an unwanted immediate app update.
-//
-// WARNING: this function should not be used in regular apps. This function
-// is a user-unfriendly hack only for very special cases, like unstable
-// rapidly-changing beta builds that would not run correctly if they were
-// even one day out of date.
-//
-// Instead of this function you should set `SUAutomaticallyUpdate` to `YES`,
-// which will gracefully install updates when the app quits.
-//
-// For UI-less/daemon apps that aren't usually quit, instead of this function,
-// you can use the delegate method
-// SUUpdaterDelegate::updater:willInstallUpdateOnQuit:immediateInstallationInvocation:
-// or
-// SUUpdaterDelegate::updater:willInstallUpdateOnQuit:immediateInstallationBlock:
-// to immediately start installation when an update was found.
-//
-// A progress dialog is shown but the user will never be prompted to read the
-// release notes.
-//
-// This function will cause update to be downloaded twice if automatic updates are
-// enabled.
-//
-// You may want to respond to the userDidCancelDownload delegate method in case
-// the user clicks the "Cancel" button while the update is downloading.
-func InstallUpdatesIfAvailable() {
-	C.installUpdatesIfAvailable()
 }
 
 // Returns the date of last update check.

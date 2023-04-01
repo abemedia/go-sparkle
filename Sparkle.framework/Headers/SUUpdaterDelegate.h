@@ -2,17 +2,21 @@
 //  SUUpdaterDelegate.h
 //  Sparkle
 //
-//  Created by Mayur Pawashe on 12/25/16.
+//  Created by Mayur Pawashe on 3/12/16.
 //  Copyright © 2016 Sparkle Project. All rights reserved.
 //
 
-#if __has_feature(modules)
-@import Foundation;
-#else
 #import <Foundation/Foundation.h>
-#endif
 
+#if defined(BUILDING_SPARKLE_SOURCES_EXTERNALLY)
+// Ignore incorrect warning
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wquoted-include-in-framework-header"
 #import "SUExport.h"
+#pragma clang diagnostic pop
+#else
+#import <Sparkle/SUExport.h>
+#endif
 
 @protocol SUVersionComparison, SUVersionDisplay;
 @class SUUpdater, SUAppcast, SUAppcastItem;
@@ -42,6 +46,7 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 /*!
  Provides methods to control the behavior of an SUUpdater object.
  */
+__deprecated_msg("Deprecated in Sparkle 2. See SPUUpdaterDelegate instead")
 @protocol SUUpdaterDelegate <NSObject>
 @optional
 
@@ -118,23 +123,6 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)item;
 
 /*!
- Called just before the scheduled update driver prompts the user to install an update.
-
- \param updater The SUUpdater instance.
-
- \return YES to allow the update prompt to be shown (the default behavior), or NO to suppress it.
- */
-- (BOOL)updaterShouldShowUpdateAlertForScheduledUpdate:(SUUpdater *)updater forItem:(SUAppcastItem *)item;
-
-/*!
- Called after the user dismisses the update alert.
-
- \param updater The SUUpdater instance.
- \param permanently YES if the alert will not appear again for this update; NO if it may reappear.
- */
-- (void)updater:(SUUpdater *)updater didDismissUpdateAlertPermanently:(BOOL)permanently forItem:(SUAppcastItem *)item;
-
-/*!
  Called when a valid update is not found.
  
  \param updater The SUUpdater instance.
@@ -142,11 +130,21 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 - (void)updaterDidNotFindUpdate:(SUUpdater *)updater;
 
 /*!
- Called when the user clicks the Skip This Version button.
- 
- \param updater The SUUpdater instance.
- */
-- (void)updater:(SUUpdater *)updater userDidSkipThisVersion:(SUAppcastItem *)item;
+  Called just before the scheduled update driver prompts the user to install an update.
+
+  \param updater The SUUpdater instance.
+
+  \return YES to allow the update prompt to be shown (the default behavior), or NO to suppress it.
+  */
+ - (BOOL)updaterShouldShowUpdateAlertForScheduledUpdate:(SUUpdater *)updater forItem:(SUAppcastItem *)item;
+
+ /*!
+  Called after the user dismisses the update alert.
+
+  \param updater The SUUpdater instance.
+  \param permanently YES if the alert will not appear again for this update; NO if it may reappear.
+  */
+ - (void)updater:(SUUpdater *)updater didDismissUpdateAlertPermanently:(BOOL)permanently forItem:(SUAppcastItem *)item;
 
 /*!
  Called immediately before downloading the specified update.
@@ -206,10 +204,20 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)item;
 
 /*!
+ Called when an update is skipped by the user.
+ 
+ \param updater The updater instance.
+ \param item The appcast item corresponding to the update that the user skipped.
+ */
+- (void)updater:(SUUpdater *)updater userDidSkipThisVersion:(SUAppcastItem *)item;
+
+/*!
  Returns whether the relaunch should be delayed in order to perform other tasks.
  
  This is not called if the user didn't relaunch on the previous update,
  in that case it will immediately restart.
+ 
+ This may also not be called if the application is not going to relaunch after it terminates.
  
  \param updater The SUUpdater instance.
  \param item The appcast item corresponding to the update that is proposed to be installed.
@@ -221,15 +229,15 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 
 /*!
  Returns whether the relaunch should be delayed in order to perform other tasks.
-
+ 
  This is not called if the user didn't relaunch on the previous update,
  in that case it will immediately restart.
-
+ 
  This method acts as a simpler alternative to SUUpdaterDelegate::updater:shouldPostponeRelaunchForUpdate:untilInvoking: avoiding usage of NSInvocation, which is not available in Swift environments.
-
+ 
  \param updater The SUUpdater instance.
  \param item The appcast item corresponding to the update that is proposed to be installed.
-
+ 
  \return \c YES to delay the relaunch.
  */
 - (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)item;
@@ -263,7 +271,9 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
  
  This method allows you to provide a custom version comparator.
  If you don't implement this method or return \c nil,
- the standard version comparator will be used.
+ the standard version comparator will be used. Note that the
+ standard version comparator may be used during installation for preventing
+ a downgrade, even if you provide a custom comparator here.
  
  \sa SUStandardVersionComparator
  
@@ -273,18 +283,17 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 
 /*!
  Returns an object that formats version numbers for display to the user.
- 
- If you don't implement this method or return \c nil,
- the standard version formatter will be used.
+ If you don't implement this method or return \c nil, the standard version formatter will be used.
  
  \sa SUUpdateAlert
- 
  \param updater The SUUpdater instance.
  */
-- (nullable id<SUVersionDisplay>)versionDisplayerForUpdater:(SUUpdater *)updater;
+- (nullable id <SUVersionDisplay>)versionDisplayerForUpdater:(SUUpdater *)updater;
 
 /*!
- Returns the path which is used to relaunch the client after the update is installed.
+ Returns the path to the application which is used to relaunch after the update is installed.
+ 
+ The installer also waits for the termination of the application at this path.
  
  The default is the path of the host bundle.
  
@@ -310,6 +319,7 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 
 /*!
  Called when an update is scheduled to be silently installed on quit.
+ 
  This is after an update has been automatically downloaded in the background.
  (i.e. SUUpdater::automaticallyDownloadsUpdates is YES)
  
@@ -324,7 +334,6 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
  This is after an update has been automatically downloaded in the background.
  (i.e. SUUpdater::automaticallyDownloadsUpdates is YES)
  This method acts as a more modern alternative to SUUpdaterDelegate::updater:willInstallUpdateOnQuit:immediateInstallationInvocation: using a block instead of NSInvocation, which is not available in Swift environments.
-
  \param updater The SUUpdater instance.
  \param item The appcast item corresponding to the update that is proposed to be installed.
  \param installationBlock Can be used to trigger an immediate silent install and relaunch.
@@ -336,8 +345,10 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
  
  \param updater The SUUpdater instance.
  \param item The appcast item corresponding to the update that was proposed to be installed.
+ 
+  \deprecated This method is no longer invoked. The installer will try to its best ability to install the update.
  */
-- (void)updater:(SUUpdater *)updater didCancelInstallUpdateOnQuit:(SUAppcastItem *)item;
+- (void)updater:(SUUpdater *)updater didCancelInstallUpdateOnQuit:(SUAppcastItem *)item __deprecated;
 
 /*!
  Called after an update is aborted due to an error.
