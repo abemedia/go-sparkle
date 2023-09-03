@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.4.0"
+VERSION="2.4.2"
 
 wget -O sparkle.tar.xz "https://github.com/sparkle-project/Sparkle/releases/download/$VERSION/Sparkle-$VERSION.tar.xz"
 mkdir sparkle
