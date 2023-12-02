@@ -17,19 +17,18 @@ See the [GoDoc](https://pkg.go.dev/github.com/abemedia/go-sparkle?tab=doc) and
 
 ## Getting started
 
-Download the Sparkle framework from
-<https://github.com/sparkle-project/Sparkle/releases/2.4.2> and move the
-`Sparkle.framework` directory from the archive into your bundle's `Frameworks`
-directory (e.g. `YourBundle.app/Contents/Frameworks/`).
+Download the Sparkle framework from <https://github.com/sparkle-project/Sparkle/releases/2.5.1> and
+move the `Sparkle.framework` directory from the archive into your bundle's `Frameworks` directory
+(e.g. `YourBundle.app/Contents/Frameworks/`).
 
 Configure Sparkle's defaults using your bundle's `Info.plist` (see
-<https://sparkle-project.org/documentation/customization/>).
-Only use the functions this package exposes to allow your users to change the defaults.
+<https://sparkle-project.org/documentation/customization/>). Only use the functions this package
+exposes to allow your users to change the defaults.
 
 Publish your updates as an appcast. See <https://sparkle-project.org/documentation/publishing/>.
 
 ## Caveats
 
-Sparkle requires a Cocoa run loop to work and as such can only be used by Go apps
-with a Cocoa UI such as [webview/webview](https://github.com/webview/webview) or
+Sparkle requires a Cocoa run loop to work and as such can only be used by Go apps with a Cocoa UI
+such as [webview/webview](https://github.com/webview/webview) or
 [therecipe/qt](https://github.com/therecipe/qt).
