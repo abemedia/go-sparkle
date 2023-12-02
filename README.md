@@ -25,10 +25,10 @@ Configure Sparkle's defaults using your bundle's `Info.plist` (see
 <https://sparkle-project.org/documentation/customization/>). Only use the functions this package
 exposes to allow your users to change the defaults.
 
-After building your app, add `rpath` so the linker knows where to find the framework:
+Ensure your binary is built with `CGO_LDFLAGS` set to `-Wl,-rpath,@loader_path/../Frameworks` e.g.
 
 ```sh
-install_name_tool -add_rpath @loader_path/../Frameworks "YourBundle.app/Contents/MacOS/your_binary"
+CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks' go build .
 ```
 
 Publish your updates as an appcast. See <https://sparkle-project.org/documentation/publishing/>.
