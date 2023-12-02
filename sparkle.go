@@ -20,33 +20,33 @@ void checkForUpdates();
 void checkForUpdatesInBackground();
 
 void setAutomaticallyChecksForUpdates(int);
-int getAutomaticallyChecksForUpdates();
+int automaticallyChecksForUpdates();
 
 void setAutomaticallyDownloadsUpdates(int);
-int getAutomaticallyDownloadsUpdates();
+int automaticallyDownloadsUpdates();
 
 void setUpdateCheckInterval(int);
-double getUpdateCheckInterval();
+double updateCheckInterval();
 
 void checkForUpdateInformation();
 
 void setFeedURL(const char*);
-const char* getFeedURL();
+const char* feedURL();
 
 void setUserAgentString(const char*);
-const char* getUserAgentString();
+const char* userAgentString();
 
 void setSendsSystemProfile(int);
-int getSendsSystemProfile();
+int sendsSystemProfile();
 
 void setDecryptionPassword(const char*);
-const char* getDecryptionPassword();
+const char* decryptionPassword();
 
-double getLastUpdateCheckDate();
+double lastUpdateCheckDate();
 
 void resetUpdateCycle();
 
-int getUpdateInProgress();
+int updateInProgress();
 
 */
 import "C"
@@ -102,8 +102,8 @@ func SetAutomaticallyChecksForUpdates(check bool) {
 // Setting this property will persist in the host bundle's user defaults.
 // The update schedule cycle will be reset in a short delay after the property's new value is set.
 // This is to allow reverting this property without kicking off a schedule change immediately
-func GetAutomaticallyChecksForUpdates() bool {
-	return C.getAutomaticallyChecksForUpdates() != 0
+func AutomaticallyChecksForUpdates() bool {
+	return C.automaticallyChecksForUpdates() != 0
 }
 
 // Sets whether or not updates can be automatically downloaded in the background.
@@ -122,8 +122,8 @@ func SetAutomaticallyDownloadsUpdates(check bool) {
 // Note that automatic downloading of updates can be disallowed by the developer
 // or by the user's system if silent updates cannot be done (eg: if they require authentication).
 // In this case, -automaticallyDownloadsUpdates will return NO regardless of how this property is set.
-func GetAutomaticallyDownloadsUpdates() bool {
-	return C.getAutomaticallyDownloadsUpdates() != 0
+func AutomaticallyDownloadsUpdates() bool {
+	return C.automaticallyDownloadsUpdates() != 0
 }
 
 // Sets the automatic update check interval.
@@ -136,8 +136,8 @@ func SetUpdateCheckInterval(duration time.Duration) {
 }
 
 // Returns the current automatic update check interval.
-func GetUpdateCheckInterval() time.Duration {
-	return time.Duration(C.getUpdateCheckInterval()) * time.Second
+func UpdateCheckInterval() time.Duration {
+	return time.Duration(C.updateCheckInterval()) * time.Second
 }
 
 // Begins a "probing" check for updates which will not actually offer to
@@ -167,8 +167,8 @@ func SetFeedURL(url string) {
 }
 
 // Returns the URL of the appcast used to download update information.
-func GetFeedURL() string {
-	return C.GoString(C.getFeedURL())
+func FeedURL() string {
+	return C.GoString(C.feedURL())
 }
 
 // Sets the user agent used when checking for updates.
@@ -179,8 +179,8 @@ func SetUserAgentString(ua string) {
 }
 
 // Returns the user agent used when checking for updates.
-func GetUserAgentString() string {
-	return C.GoString(C.getUserAgentString())
+func UserAgentString() string {
+	return C.GoString(C.userAgentString())
 }
 
 // Sets whether or not the user's system profile information is sent when checking for updates.
@@ -191,8 +191,8 @@ func SetSendsSystemProfile(check bool) {
 }
 
 // Returns whether or not the user's system profile information is sent when checking for updates.
-func GetSendsSystemProfile() bool {
-	return C.getSendsSystemProfile() != 0
+func SendsSystemProfile() bool {
+	return C.sendsSystemProfile() != 0
 }
 
 // Sets the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
@@ -203,13 +203,13 @@ func SetDecryptionPassword(url string) {
 }
 
 // Returns the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
-func GetDecryptionPassword() string {
-	return C.GoString(C.getDecryptionPassword())
+func DecryptionPassword() string {
+	return C.GoString(C.decryptionPassword())
 }
 
 // Returns the date of last update check.
-func GetLastUpdateCheckDate() time.Time {
-	s, n := math.Modf(float64(C.getLastUpdateCheckDate()))
+func LastUpdateCheckDate() time.Time {
+	s, n := math.Modf(float64(C.lastUpdateCheckDate()))
 	return time.Unix(int64(s), int64(float64(time.Second)*n))
 }
 
@@ -223,6 +223,6 @@ func ResetUpdateCycle() {
 }
 
 // Returns whether or not an update is in progress.
-func GetUpdateInProgress() bool {
-	return C.getAutomaticallyChecksForUpdates() != 0
+func UpdateInProgress() bool {
+	return C.updateInProgress() != 0
 }
