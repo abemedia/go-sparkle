@@ -25,7 +25,15 @@ Configure Sparkle's defaults using your bundle's `Info.plist` (see
 <https://sparkle-project.org/documentation/customization/>). Only use the functions this package
 exposes to allow your users to change the defaults.
 
+After building your app, add `rpath` so the linker knows where to find the framework:
+
+```sh
+install_name_tool -add_rpath @loader_path/../Frameworks "YourBundle.app/Contents/MacOS/your_binary"
+```
+
 Publish your updates as an appcast. See <https://sparkle-project.org/documentation/publishing/>.
+
+See the [example](./example/) for more details.
 
 ## Caveats
 
