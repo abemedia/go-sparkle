@@ -1,0 +1,41 @@
+#/bin/bash -e
+
+# Customise with your own developer ID.
+CODE_SIGN_IDENTITY="Developer ID Application: Adam Bouqdib"
+BINARY="sparkle-example"
+BUNDLE="Example.app"
+SPARKLE_VERSION="2.5.1"
+
+# Build Go app.
+go build -o $BUNDLE/Contents/MacOS/$BINARY .
+
+# Add Frameworks path for linker
+install_name_tool -add_rpath @loader_path/../Frameworks $BUNDLE/Contents/MacOS/$BINARY
+
+SPARKLE_PATH="$BUNDLE/Contents/Frameworks/Sparkle.framework"
+DIR=$(mktemp -d)
+
+# Download Sparkle Framework
+wget -q -O $DIR/Sparkle-$SPARKLE_VERSION.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
+tar -xf $DIR/Sparkle-$SPARKLE_VERSION.tar.xz --directory $DIR
+
+# Add to bundle
+rm -rf $SPARKLE_PATH
+mkdir -p $BUNDLE/Contents/Frameworks
+mv $DIR/Sparkle.framework/ $SPARKLE_PATH
+
+# Sign code
+echo "\nSigning..."
+# Uncomment for sandboxed apps. See https://sparkle-project.org/documentation/sandboxing/
+# codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime $SPARKLE_PATH/Versions/B/XPCServices/Installer.xpc
+# codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime --entitlements $DIR/Entitlements/Downloader.entitlements $SPARKLE_PATH/Versions/B/XPCServices/Downloader.xpc
+# codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime $SPARKLE_PATH/Versions/B/Autoupdate
+# codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime $SPARKLE_PATH/Versions/B/Updater.app
+codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime $SPARKLE_PATH
+codesign --force --sign "$CODE_SIGN_IDENTITY" --options runtime $BUNDLE
+
+echo "\nChecking signature..."
+codesign --deep --verify -vvvv $BUNDLE
+
+# Cleanup
+rm -rf $DIR
