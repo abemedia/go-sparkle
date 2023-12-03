@@ -40,3 +40,8 @@ See the [example](./example/) for more details.
 Sparkle requires a Cocoa run loop to work and as such can only be used by Go apps with a Cocoa UI
 such as [webview/webview](https://github.com/webview/webview) or
 [therecipe/qt](https://github.com/therecipe/qt).
+
+## Migrating to v0.1.0
+
+The `Get` prefix was removed from all function names to make them match C functions in the Sparkle
+framework e.g. `GetFeedURL` is now `FeedURL` etc.
