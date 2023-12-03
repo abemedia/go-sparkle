@@ -16,3 +16,4 @@ jobs:
         with:
           release-type: go
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          bump-minor-pre-major: true
