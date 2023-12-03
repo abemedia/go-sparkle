@@ -7,10 +7,8 @@ BUNDLE="Example.app"
 SPARKLE_VERSION="2.5.1"
 
 # Build Go app.
+CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks'
 go build -o $BUNDLE/Contents/MacOS/$BINARY .
-
-# Add Frameworks path for linker
-install_name_tool -add_rpath @loader_path/../Frameworks $BUNDLE/Contents/MacOS/$BINARY
 
 SPARKLE_PATH="$BUNDLE/Contents/Frameworks/Sparkle.framework"
 DIR=$(mktemp -d)
