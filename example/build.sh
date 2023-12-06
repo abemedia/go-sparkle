@@ -7,14 +7,13 @@ BUNDLE="Example.app"
 SPARKLE_VERSION="2.5.1"
 
 # Build Go app.
-CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks'
-go build -o $BUNDLE/Contents/MacOS/$BINARY .
+CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks' go build -o $BUNDLE/Contents/MacOS/$BINARY .
 
 SPARKLE_PATH="$BUNDLE/Contents/Frameworks/Sparkle.framework"
 DIR=$(mktemp -d)
 
 # Download Sparkle Framework
-wget -q -O $DIR/Sparkle-$SPARKLE_VERSION.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
+curl -fsSL -o $DIR/Sparkle-$SPARKLE_VERSION.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
 tar -xf $DIR/Sparkle-$SPARKLE_VERSION.tar.xz --directory $DIR
 
 # Add to bundle
