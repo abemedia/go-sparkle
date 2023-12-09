@@ -13,7 +13,9 @@ void sparkle_initialize() {
 
 void sparkle_checkForUpdates() { [updater checkForUpdates:updater]; }
 
-void sparkle_checkForUpdatesInBackground() { [updater checkForUpdatesInBackground]; }
+void sparkle_checkForUpdatesInBackground() {
+  [updater checkForUpdatesInBackground];
+}
 
 void sparkle_setAutomaticallyChecksForUpdates(int check) {
   [updater setAutomaticallyChecksForUpdates:check];
@@ -37,7 +39,9 @@ void sparkle_setUpdateCheckInterval(int interval) {
 
 int sparkle_updateCheckInterval() { return [updater updateCheckInterval]; }
 
-void sparkle_checkForUpdateInformation() { [updater checkForUpdateInformation]; }
+void sparkle_checkForUpdateInformation() {
+  [updater checkForUpdateInformation];
+}
 
 void sparkle_setFeedURL(const char *feedURL) {
   [updater setFeedURL:[NSURL URLWithString:@(feedURL)]];
@@ -47,11 +51,17 @@ const char *sparkle_feedURL() {
   return [[[updater feedURL] absoluteString] UTF8String];
 }
 
-void sparkle_setUserAgentString(const char *ua) { [updater setUserAgentString:@(ua)]; }
+void sparkle_setUserAgentString(const char *ua) {
+  [updater setUserAgentString:@(ua)];
+}
 
-const char *sparkle_userAgentString() { return [[updater userAgentString] UTF8String]; }
+const char *sparkle_userAgentString() {
+  return [[updater userAgentString] UTF8String];
+}
 
-void sparkle_setSendsSystemProfile(int check) { [updater setSendsSystemProfile:check]; }
+void sparkle_setSendsSystemProfile(int check) {
+  [updater setSendsSystemProfile:check];
+}
 
 int sparkle_sendsSystemProfile() { return [updater sendsSystemProfile]; }
 
