@@ -11,15 +11,22 @@ jobs:
     name: Test
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-go@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
         with:
           go-version: stable
           cache: false
 
-      - uses: golangci/golangci-lint-action@v3
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
         with:
           version: latest
 
-      - run: go build -o test ./testdata
+      - name: Run clang-format
+        run: brew install clang-format && clang-format *.m -n --Werror
+
+      - name: Run Go build
+        run: go build -o test ./testdata
