@@ -13,8 +13,14 @@ SPARKLE_PATH="$BUNDLE/Contents/Frameworks/Sparkle.framework"
 DIR=$(mktemp -d)
 
 # Download Sparkle Framework
-curl -fsSL -o $DIR/Sparkle-$SPARKLE_VERSION.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
-tar -xf $DIR/Sparkle-$SPARKLE_VERSION.tar.xz --directory $DIR
+URL=https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
+curl -fsSL $URL | tar -xJ -C "$DIR" ./Sparkle.framework
+
+# Delete source files
+for name in Headers PrivateHeaders Modules; do
+  rm -rf "$(readlink -f "$DIR/Sparkle.framework/$name")"
+  rm -rf "$DIR/Sparkle.framework/$name"
+done
 
 # Add to bundle
 rm -rf $SPARKLE_PATH
