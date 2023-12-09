@@ -13,40 +13,40 @@ package sparkle
 
 #include <stdlib.h>
 
-void initialize();
+void sparkle_initialize();
 
-void checkForUpdates();
+void sparkle_checkForUpdates();
 
-void checkForUpdatesInBackground();
+void sparkle_checkForUpdatesInBackground();
 
-void setAutomaticallyChecksForUpdates(int);
-int automaticallyChecksForUpdates();
+void sparkle_setAutomaticallyChecksForUpdates(int);
+int sparkle_automaticallyChecksForUpdates();
 
-void setAutomaticallyDownloadsUpdates(int);
-int automaticallyDownloadsUpdates();
+void sparkle_setAutomaticallyDownloadsUpdates(int);
+int sparkle_automaticallyDownloadsUpdates();
 
-void setUpdateCheckInterval(int);
-double updateCheckInterval();
+void sparkle_setUpdateCheckInterval(int);
+double sparkle_updateCheckInterval();
 
-void checkForUpdateInformation();
+void sparkle_checkForUpdateInformation();
 
-void setFeedURL(const char*);
-const char* feedURL();
+void sparkle_setFeedURL(const char*);
+const char* sparkle_feedURL();
 
-void setUserAgentString(const char*);
-const char* userAgentString();
+void sparkle_setUserAgentString(const char*);
+const char* sparkle_userAgentString();
 
-void setSendsSystemProfile(int);
-int sendsSystemProfile();
+void sparkle_setSendsSystemProfile(int);
+int sparkle_sendsSystemProfile();
 
-void setDecryptionPassword(const char*);
-const char* decryptionPassword();
+void sparkle_setDecryptionPassword(const char*);
+const char* sparkle_decryptionPassword();
 
-double lastUpdateCheckDate();
+double sparkle_lastUpdateCheckDate();
 
-void resetUpdateCycle();
+void sparkle_resetUpdateCycle();
 
-int updateInProgress();
+int sparkle_updateInProgress();
 
 */
 import "C"
@@ -62,7 +62,7 @@ import (
 
 func init() {
 	runtime.LockOSThread()
-	C.initialize()
+	C.sparkle_initialize()
 }
 
 // Explicitly checks for updates and displays a progress dialog while doing so.
@@ -74,7 +74,7 @@ func init() {
 //
 // This will find updates that the user has opted into skipping.
 func CheckForUpdates() {
-	C.checkForUpdates()
+	C.sparkle_checkForUpdates()
 }
 
 // Checks for updates, but does not display any UI unless an update is found.
@@ -89,12 +89,12 @@ func CheckForUpdates() {
 //
 // This will not find updates that the user has opted into skipping.
 func CheckForUpdatesInBackground() {
-	C.checkForUpdatesInBackground()
+	C.sparkle_checkForUpdatesInBackground()
 }
 
 // Sets whether or not to check for updates automatically.
 func SetAutomaticallyChecksForUpdates(check bool) {
-	C.setAutomaticallyChecksForUpdates(bool2int(check))
+	C.sparkle_setAutomaticallyChecksForUpdates(bool2int(check))
 }
 
 // Returns whether or not to check for updates automatically.
@@ -103,7 +103,7 @@ func SetAutomaticallyChecksForUpdates(check bool) {
 // The update schedule cycle will be reset in a short delay after the property's new value is set.
 // This is to allow reverting this property without kicking off a schedule change immediately
 func AutomaticallyChecksForUpdates() bool {
-	return C.automaticallyChecksForUpdates() != 0
+	return C.sparkle_automaticallyChecksForUpdates() != 0
 }
 
 // Sets whether or not updates can be automatically downloaded in the background.
@@ -114,7 +114,7 @@ func AutomaticallyChecksForUpdates() bool {
 //
 // Setting this property will persist in the host bundle's user defaults.
 func SetAutomaticallyDownloadsUpdates(check bool) {
-	C.setAutomaticallyDownloadsUpdates(bool2int(check))
+	C.sparkle_setAutomaticallyDownloadsUpdates(bool2int(check))
 }
 
 // Returns whether or not updates can be automatically downloaded in the background.
@@ -123,7 +123,7 @@ func SetAutomaticallyDownloadsUpdates(check bool) {
 // or by the user's system if silent updates cannot be done (eg: if they require authentication).
 // In this case, -automaticallyDownloadsUpdates will return NO regardless of how this property is set.
 func AutomaticallyDownloadsUpdates() bool {
-	return C.automaticallyDownloadsUpdates() != 0
+	return C.sparkle_automaticallyDownloadsUpdates() != 0
 }
 
 // Sets the automatic update check interval.
@@ -132,12 +132,12 @@ func AutomaticallyDownloadsUpdates() bool {
 // The update schedule cycle will be reset in a short delay after the property's new value is set.
 // This is to allow reverting this property without kicking off a schedule change immediately
 func SetUpdateCheckInterval(duration time.Duration) {
-	C.setUpdateCheckInterval(C.int(duration.Seconds()))
+	C.sparkle_setUpdateCheckInterval(C.int(duration.Seconds()))
 }
 
 // Returns the current automatic update check interval.
 func UpdateCheckInterval() time.Duration {
-	return time.Duration(C.updateCheckInterval()) * time.Second
+	return time.Duration(C.sparkle_updateCheckInterval()) * time.Second
 }
 
 // Begins a "probing" check for updates which will not actually offer to
@@ -150,7 +150,7 @@ func UpdateCheckInterval() time.Duration {
 //
 // Updates that have been skipped by the user will not be found.
 func CheckForUpdateInformation() {
-	C.checkForUpdateInformation()
+	C.sparkle_checkForUpdateInformation()
 }
 
 // Sets the URL of the appcast used to download update information.
@@ -163,53 +163,53 @@ func CheckForUpdateInformation() {
 func SetFeedURL(url string) {
 	u := C.CString(url)
 	defer C.free(unsafe.Pointer(u))
-	C.setFeedURL(u)
+	C.sparkle_setFeedURL(u)
 }
 
 // Returns the URL of the appcast used to download update information.
 func FeedURL() string {
-	return C.GoString(C.feedURL())
+	return C.GoString(C.sparkle_feedURL())
 }
 
 // Sets the user agent used when checking for updates.
 func SetUserAgentString(ua string) {
 	u := C.CString(ua)
 	defer C.free(unsafe.Pointer(u))
-	C.setUserAgentString(u)
+	C.sparkle_setUserAgentString(u)
 }
 
 // Returns the user agent used when checking for updates.
 func UserAgentString() string {
-	return C.GoString(C.userAgentString())
+	return C.GoString(C.sparkle_userAgentString())
 }
 
 // Sets whether or not the user's system profile information is sent when checking for updates.
 //
 // Setting this property will persist in the host bundle's user defaults.
 func SetSendsSystemProfile(check bool) {
-	C.setSendsSystemProfile(bool2int(check))
+	C.sparkle_setSendsSystemProfile(bool2int(check))
 }
 
 // Returns whether or not the user's system profile information is sent when checking for updates.
 func SendsSystemProfile() bool {
-	return C.sendsSystemProfile() != 0
+	return C.sparkle_sendsSystemProfile() != 0
 }
 
 // Sets the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
 func SetDecryptionPassword(url string) {
 	u := C.CString(url)
 	defer C.free(unsafe.Pointer(u))
-	C.setDecryptionPassword(u)
+	C.sparkle_setDecryptionPassword(u)
 }
 
 // Returns the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
 func DecryptionPassword() string {
-	return C.GoString(C.decryptionPassword())
+	return C.GoString(C.sparkle_decryptionPassword())
 }
 
 // Returns the date of last update check.
 func LastUpdateCheckDate() time.Time {
-	s, n := math.Modf(float64(C.lastUpdateCheckDate()))
+	s, n := math.Modf(float64(C.sparkle_lastUpdateCheckDate()))
 	return time.Unix(int64(s), int64(float64(time.Second)*n))
 }
 
@@ -219,10 +219,10 @@ func LastUpdateCheckDate() time.Time {
 // This call does not change the date of the next check,
 // but only the internal NSTimer.
 func ResetUpdateCycle() {
-	C.resetUpdateCycle()
+	C.sparkle_resetUpdateCycle()
 }
 
 // Returns whether or not an update is in progress.
 func UpdateInProgress() bool {
-	return C.updateInProgress() != 0
+	return C.sparkle_updateInProgress() != 0
 }

@@ -6,67 +6,67 @@
 
 static SUUpdater *updater = nil;
 
-void initialize() {
+void sparkle_initialize() {
   if (!updater)
     updater = [[SUUpdater sharedUpdater] retain];
 }
 
-void checkForUpdates() { [updater checkForUpdates:updater]; }
+void sparkle_checkForUpdates() { [updater checkForUpdates:updater]; }
 
-void checkForUpdatesInBackground() { [updater checkForUpdatesInBackground]; }
+void sparkle_checkForUpdatesInBackground() { [updater checkForUpdatesInBackground]; }
 
-void setAutomaticallyChecksForUpdates(int check) {
+void sparkle_setAutomaticallyChecksForUpdates(int check) {
   [updater setAutomaticallyChecksForUpdates:check];
 }
 
-int automaticallyChecksForUpdates() {
+int sparkle_automaticallyChecksForUpdates() {
   return [updater automaticallyChecksForUpdates];
 }
 
-void setAutomaticallyDownloadsUpdates(int check) {
+void sparkle_setAutomaticallyDownloadsUpdates(int check) {
   [updater setAutomaticallyDownloadsUpdates:check];
 }
 
-int automaticallyDownloadsUpdates() {
+int sparkle_automaticallyDownloadsUpdates() {
   return [updater automaticallyDownloadsUpdates];
 }
 
-void setUpdateCheckInterval(int interval) {
+void sparkle_setUpdateCheckInterval(int interval) {
   [updater setUpdateCheckInterval:interval];
 }
 
-int updateCheckInterval() { return [updater updateCheckInterval]; }
+int sparkle_updateCheckInterval() { return [updater updateCheckInterval]; }
 
-void checkForUpdateInformation() { [updater checkForUpdateInformation]; }
+void sparkle_checkForUpdateInformation() { [updater checkForUpdateInformation]; }
 
-void setFeedURL(const char *feedURL) {
+void sparkle_setFeedURL(const char *feedURL) {
   [updater setFeedURL:[NSURL URLWithString:@(feedURL)]];
 }
 
-const char *feedURL() {
+const char *sparkle_feedURL() {
   return [[[updater feedURL] absoluteString] UTF8String];
 }
 
-void setUserAgentString(const char *ua) { [updater setUserAgentString:@(ua)]; }
+void sparkle_setUserAgentString(const char *ua) { [updater setUserAgentString:@(ua)]; }
 
-const char *userAgentString() { return [[updater userAgentString] UTF8String]; }
+const char *sparkle_userAgentString() { return [[updater userAgentString] UTF8String]; }
 
-void setSendsSystemProfile(int check) { [updater setSendsSystemProfile:check]; }
+void sparkle_setSendsSystemProfile(int check) { [updater setSendsSystemProfile:check]; }
 
-int sendsSystemProfile() { return [updater sendsSystemProfile]; }
+int sparkle_sendsSystemProfile() { return [updater sendsSystemProfile]; }
 
-void setDecryptionPassword(const char *pw) {
+void sparkle_setDecryptionPassword(const char *pw) {
   [updater setDecryptionPassword:@(pw)];
 }
 
-const char *decryptionPassword() {
+const char *sparkle_decryptionPassword() {
   return [[updater decryptionPassword] UTF8String];
 }
 
-double lastUpdateCheckDate() {
+double sparkle_lastUpdateCheckDate() {
   return [[updater lastUpdateCheckDate] timeIntervalSince1970];
 }
 
-void resetUpdateCycle() { [updater resetUpdateCycle]; }
+void sparkle_resetUpdateCycle() { [updater resetUpdateCycle]; }
 
-int updateInProgress() { return [updater updateInProgress]; }
+int sparkle_updateInProgress() { return [updater updateInProgress]; }
