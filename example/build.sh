@@ -7,15 +7,20 @@ BUNDLE="Example.app"
 SPARKLE_VERSION="2.5.1"
 
 # Build Go app.
-CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks'
-go build -o $BUNDLE/Contents/MacOS/$BINARY .
+CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks' go build -o $BUNDLE/Contents/MacOS/$BINARY .
 
 SPARKLE_PATH="$BUNDLE/Contents/Frameworks/Sparkle.framework"
 DIR=$(mktemp -d)
 
 # Download Sparkle Framework
-wget -q -O $DIR/Sparkle-$SPARKLE_VERSION.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
-tar -xf $DIR/Sparkle-$SPARKLE_VERSION.tar.xz --directory $DIR
+URL=https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz
+curl -fsSL $URL | tar -xJ -C "$DIR" ./Sparkle.framework
+
+# Delete source files
+for name in Headers PrivateHeaders Modules; do
+  rm -rf "$(readlink -f "$DIR/Sparkle.framework/$name")"
+  rm -rf "$DIR/Sparkle.framework/$name"
+done
 
 # Add to bundle
 rm -rf $SPARKLE_PATH
