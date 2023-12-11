@@ -41,6 +41,23 @@ void sparkle_initialize() {
         [[SPUStandardUpdaterController alloc] initWithStartingUpdater:true
                                                       updaterDelegate:delegate
                                                    userDriverDelegate:nil];
+    /*
+    Clears any feed URL from the host bundle’s user defaults that was set via
+    -setFeedURL:
+
+    You should call this method if you have used -setFeedURL: in the past and
+    want to stop using that API. Otherwise for compatibility Sparkle will prefer
+    to use the feed URL that was set in the user defaults over the one that was
+    specified in the host bundle’s Info.plist, which is often undesirable
+    (except for testing purposes).
+
+    If a feed URL is found stored in the host bundle’s user defaults (from
+    calling -setFeedURL:) before it gets cleared, then that previously set URL
+    is returned from this method.
+
+    For dynamic URL setting we use now delegate method feedURLStringForUpdater:
+    */
+    [updateController.updater clearFeedURLFromUserDefaults];
   }
 }
 
