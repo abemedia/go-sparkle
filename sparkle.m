@@ -1,15 +1,15 @@
 #define BUILDING_SPARKLE_SOURCES_EXTERNALLY
 
+#import "_cgo_export.h"
 #import <Foundation/Foundation.h>
-#import <Headers/SPUUpdater.h>
 #import <Headers/SPUStandardUpdaterController.h>
+#import <Headers/SPUUpdater.h>
 #import <Headers/SPUUpdaterDelegate.h>
 #import <objc/runtime.h> // Required for class_addMethod()
-#import "_cgo_export.h"
 
 @interface SparkleUpdaterDelegate : NSObject <SPUUpdaterDelegate>
 
-@property (nonatomic, strong) NSString *decryptionPassword;
+@property(nonatomic, strong) NSString *decryptionPassword;
 
 @end
 
@@ -19,17 +19,17 @@ static SPUStandardUpdaterController *updateController = nil;
 @implementation SparkleUpdaterDelegate
 
 - (NSString *)feedURLStringForUpdater:(SPUUpdater *)updater {
-    char* url = CGOFeedURL();
-    if (url != NULL) {
-        NSString *u = @(url);
-        free(url);
-        return u;
-    }
-    return nil;
+  char *url = CGOFeedURL();
+  if (url != NULL) {
+    NSString *u = @(url);
+    free(url);
+    return u;
+  }
+  return nil;
 }
 
 - (NSString *)decryptionPasswordForUpdater:(SPUUpdater *)updater {
-    return self.decryptionPassword;
+  return self.decryptionPassword;
 }
 
 @end
@@ -37,9 +37,10 @@ static SPUStandardUpdaterController *updateController = nil;
 void sparkle_initialize() {
   if (!updateController) {
     delegate = [[SparkleUpdaterDelegate alloc] init];
-    updateController = [[SPUStandardUpdaterController alloc]    initWithStartingUpdater:true
-                                                                        updaterDelegate:delegate
-                                                                     userDriverDelegate:nil];
+    updateController =
+        [[SPUStandardUpdaterController alloc] initWithStartingUpdater:true
+                                                      updaterDelegate:delegate
+                                                   userDriverDelegate:nil];
   }
 }
 
@@ -69,7 +70,9 @@ void sparkle_setUpdateCheckInterval(int interval) {
   [updateController.updater setUpdateCheckInterval:interval];
 }
 
-int sparkle_updateCheckInterval() { return [updateController.updater updateCheckInterval]; }
+int sparkle_updateCheckInterval() {
+  return [updateController.updater updateCheckInterval];
+}
 
 void sparkle_checkForUpdateInformation() {
   [updateController.updater checkForUpdateInformation];
@@ -87,7 +90,9 @@ void sparkle_setSendsSystemProfile(int check) {
   [updateController.updater setSendsSystemProfile:check];
 }
 
-int sparkle_sendsSystemProfile() { return [updateController.updater sendsSystemProfile]; }
+int sparkle_sendsSystemProfile() {
+  return [updateController.updater sendsSystemProfile];
+}
 
 void sparkle_setDecryptionPassword(const char *pw) {
   delegate.decryptionPassword = @(pw);
@@ -103,4 +108,6 @@ double sparkle_lastUpdateCheckDate() {
 
 void sparkle_resetUpdateCycle() { [updateController.updater resetUpdateCycle]; }
 
-int sparkle_updateInProgress() { return [updateController.updater sessionInProgress]; }
+int sparkle_updateInProgress() {
+  return [updateController.updater sessionInProgress];
+}
