@@ -4,8 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/abemedia/go-sparkle"
 	webview "github.com/webview/webview_go"
+
+	"github.com/abemedia/go-sparkle"
 )
 
 func main() {
@@ -13,14 +14,25 @@ func main() {
 	// In a real application this would come from a remote source.
 	go func() {
 		log.Fatal(http.ListenAndServe(":3001", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Println("Serving appcast feed", r.URL)
 			w.Header().Set("Content-Type", "application/xml")
 			_, _ = w.Write([]byte(appcastFeed))
 		})))
 	}()
 
+	// It's encouraged to set the url in your Info.plist file and consider channels,
+	// but you can also set them programmatically.
+	sparkle.SetFeedURL("http://localhost:3001/appcast.xml")
+
 	// This is not actually needed and is just designed to manually trigger updates.
 	// Importing github.com/abemedia/go-sparkle is enough to make your app check for updates on startup.
 	sparkle.CheckForUpdates()
+
+	log.Println("Updates check", sparkle.FeedURL(), "by", sparkle.UserAgentString())
+
+	// You can also set the decryption password for DMG programmatically
+	sparkle.SetDecryptionPassword("password")
+	log.Printf("DMG decryption pwd set to <%s>", sparkle.DecryptionPassword())
 
 	w := webview.New(false)
 	defer w.Destroy()

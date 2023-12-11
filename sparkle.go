@@ -153,22 +153,18 @@ func CheckForUpdateInformation() {
 	C.sparkle_checkForUpdateInformation()
 }
 
-// Sets the URL of the appcast used to download update information.
-//
-// Setting this property will persist in the host bundle's user defaults.
-// If you don't want persistence, you may want to consider instead implementing
-// SUUpdaterDelegate::feedURLStringForUpdater: or SUUpdaterDelegate::feedParametersForUpdater:sendingSystemProfile:
+// Sets the URL of the appcast used to download update information using the SparkleUpdaterDelegate.
 //
 // This property must be called on the main thread.
 func SetFeedURL(url string) {
-	u := C.CString(url)
-	defer C.free(unsafe.Pointer(u))
-	C.sparkle_setFeedURL(u)
+	feedURL = func() string {
+		return url
+	}
 }
 
 // Returns the URL of the appcast used to download update information.
 func FeedURL() string {
-	return C.GoString(C.sparkle_feedURL())
+	return feedURL()
 }
 
 // Sets the user agent used when checking for updates.
@@ -196,8 +192,8 @@ func SendsSystemProfile() bool {
 }
 
 // Sets the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
-func SetDecryptionPassword(url string) {
-	u := C.CString(url)
+func SetDecryptionPassword(pw string) {
+	u := C.CString(pw)
 	defer C.free(unsafe.Pointer(u))
 	C.sparkle_setDecryptionPassword(u)
 }
