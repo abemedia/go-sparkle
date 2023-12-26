@@ -42,6 +42,8 @@ int sparkle_sendsSystemProfile();
 void sparkle_setDecryptionPassword(const char*);
 const char* sparkle_decryptionPassword();
 
+void sparkle_setAllowedChannelsForUpdater(const char **channels, int length);
+
 double sparkle_lastUpdateCheckDate();
 
 void sparkle_resetUpdateCycle();
@@ -153,22 +155,18 @@ func CheckForUpdateInformation() {
 	C.sparkle_checkForUpdateInformation()
 }
 
-// Sets the URL of the appcast used to download update information.
-//
-// Setting this property will persist in the host bundle's user defaults.
-// If you don't want persistence, you may want to consider instead implementing
-// SUUpdaterDelegate::feedURLStringForUpdater: or SUUpdaterDelegate::feedParametersForUpdater:sendingSystemProfile:
+// Sets the URL of the appcast used to download update information using the SparkleUpdaterDelegate.
 //
 // This property must be called on the main thread.
 func SetFeedURL(url string) {
-	u := C.CString(url)
-	defer C.free(unsafe.Pointer(u))
-	C.sparkle_setFeedURL(u)
+	feedURL = func() string {
+		return url
+	}
 }
 
 // Returns the URL of the appcast used to download update information.
 func FeedURL() string {
-	return C.GoString(C.sparkle_feedURL())
+	return feedURL()
 }
 
 // Sets the user agent used when checking for updates.
@@ -196,8 +194,8 @@ func SendsSystemProfile() bool {
 }
 
 // Sets the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
-func SetDecryptionPassword(url string) {
-	u := C.CString(url)
+func SetDecryptionPassword(pw string) {
+	u := C.CString(pw)
 	defer C.free(unsafe.Pointer(u))
 	C.sparkle_setDecryptionPassword(u)
 }
@@ -205,6 +203,29 @@ func SetDecryptionPassword(url string) {
 // Returns the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
 func DecryptionPassword() string {
 	return C.GoString(C.sparkle_decryptionPassword())
+}
+
+// SetAllowedChannelsForUpdater sets Sparkle channels the updater is allowed to find new updates from.
+// An empty set is the default behavior, which means the updater will only look for updates in the default channel
+//
+// Read more at https://sparkle-project.org/documentation/publishing/#channels
+func SetAllowedChannelsForUpdater(channels ...string) {
+	if len(channels) == 0 {
+		C.sparkle_setAllowedChannelsForUpdater(nil, 0)
+		return
+	}
+
+	mapped := make([]*C.char, len(channels))
+	for i, c := range channels {
+		mapped[i] = C.CString(c)
+	}
+	arrayPtr := (**C.char)(unsafe.Pointer(&mapped[0]))
+
+	C.sparkle_setAllowedChannelsForUpdater(arrayPtr, C.int(len(channels)))
+
+	for i := range channels {
+		C.free(unsafe.Pointer(mapped[i]))
+	}
 }
 
 // Returns the date of last update check.
