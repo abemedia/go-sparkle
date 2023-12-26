@@ -11,6 +11,8 @@
 
 @property(nonatomic, strong) NSString *decryptionPassword;
 
+@property(nonatomic, strong) NSSet<NSString *> *allowedChannelsForUpdater;
+
 @end
 
 static SparkleUpdaterDelegate *delegate = nil;
@@ -30,6 +32,10 @@ static SPUStandardUpdaterController *updateController = nil;
 
 - (NSString *)decryptionPasswordForUpdater:(SPUUpdater *)updater {
   return self.decryptionPassword;
+}
+
+- (NSSet<NSString *> *)allowedChannelsForUpdater:(SPUUpdater *)updater {
+  return self.allowedChannelsForUpdater;
 }
 
 @end
@@ -117,6 +123,15 @@ void sparkle_setDecryptionPassword(const char *pw) {
 
 const char *sparkle_decryptionPassword() {
   return [delegate.decryptionPassword UTF8String];
+}
+
+void sparkle_setAllowedChannelsForUpdater(const char **channels, int length) {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:length];
+  for (int i = 0; i < length; i++) {
+    [array addObject:[NSString stringWithUTF8String:channels[i]]];
+  }
+  NSSet *set = [NSSet setWithArray:array];
+  delegate.allowedChannelsForUpdater = set;
 }
 
 double sparkle_lastUpdateCheckDate() {

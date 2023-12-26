@@ -42,6 +42,8 @@ int sparkle_sendsSystemProfile();
 void sparkle_setDecryptionPassword(const char*);
 const char* sparkle_decryptionPassword();
 
+void sparkle_setAllowedChannelsForUpdater(const char **channels, int length);
+
 double sparkle_lastUpdateCheckDate();
 
 void sparkle_resetUpdateCycle();
@@ -201,6 +203,29 @@ func SetDecryptionPassword(pw string) {
 // Returns the decryption password used for extracting updates shipped as Apple Disk Images (dmg)
 func DecryptionPassword() string {
 	return C.GoString(C.sparkle_decryptionPassword())
+}
+
+// SetAllowedChannelsForUpdater sets Sparkle channels the updater is allowed to find new updates from.
+// An empty set is the default behavior, which means the updater will only look for updates in the default channel
+//
+// Read more at https://sparkle-project.org/documentation/publishing/#channels
+func SetAllowedChannelsForUpdater(channels ...string) {
+	if len(channels) == 0 {
+		C.sparkle_setAllowedChannelsForUpdater(nil, 0)
+		return
+	}
+
+	mapped := make([]*C.char, len(channels))
+	for i, c := range channels {
+		mapped[i] = C.CString(c)
+	}
+	arrayPtr := (**C.char)(unsafe.Pointer(&mapped[0]))
+
+	C.sparkle_setAllowedChannelsForUpdater(arrayPtr, C.int(len(channels)))
+
+	for i := range channels {
+		C.free(unsafe.Pointer(mapped[i]))
+	}
 }
 
 // Returns the date of last update check.
