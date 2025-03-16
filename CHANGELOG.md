@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/abemedia/go-sparkle/compare/v0.1.1...v0.2.0) (2025-03-16)
+
+
+### Features
+
+* update sparkle to v2.7.0, improve example ([#27](https://github.com/abemedia/go-sparkle/issues/27)) ([9a22509](https://github.com/abemedia/go-sparkle/commit/9a225094d225f8c569c27722fe1e3b496f57bf41))
+
 ## [0.1.1](https://github.com/abemedia/go-sparkle/compare/v0.1.0...v0.1.1) (2023-12-09)
 
 
