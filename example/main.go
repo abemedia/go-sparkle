@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -22,11 +23,31 @@ func main() {
 	// Importing github.com/abemedia/go-sparkle is enough to make your app check for updates on startup.
 	sparkle.CheckForUpdates()
 
+	AutomaticallyChecksForUpdates := sparkle.AutomaticallyChecksForUpdates()
+	AutomaticallyDownloadsUpdates := sparkle.AutomaticallyDownloadsUpdates()
+	UpdateCheckInterval := sparkle.UpdateCheckInterval()
+	FeedURL := sparkle.FeedURL()
+	UserAgentString := sparkle.UserAgentString()
+	SendsSystemProfile := sparkle.SendsSystemProfile()
+	DecryptionPassword := sparkle.DecryptionPassword()
+	LastUpdateCheckDate := sparkle.LastUpdateCheckDate()
+	UpdateInProgress := sparkle.UpdateInProgress()
+	s := fmt.Sprintf(`
+AutomaticallyChecksForUpdates: %v<br>
+AutomaticallyDownloadsUpdates: %v<br>
+UpdateCheckInterval: %v<br>
+FeedURL: %v<br>
+UserAgentString: %v<br>
+SendsSystemProfile: %v<br>
+DecryptionPassword: %v<br>
+LastUpdateCheckDate: %v<br>
+UpdateInProgress: %v`, AutomaticallyChecksForUpdates, AutomaticallyDownloadsUpdates, UpdateCheckInterval, FeedURL, UserAgentString, SendsSystemProfile, DecryptionPassword, LastUpdateCheckDate, UpdateInProgress)
+
 	w := webview.New(false)
 	defer w.Destroy()
 	w.SetTitle("Sparkle Example")
 	w.SetSize(800, 600, webview.HintNone)
-	w.SetHtml("<center><h1>Hello World</h1></center>")
+	w.SetHtml("<center><h1>Hello World</h1></center>" + s)
 	w.Run()
 }
 

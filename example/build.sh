@@ -4,7 +4,7 @@
 CODE_SIGN_IDENTITY="Developer ID Application: Adam Bouqdib"
 BINARY="sparkle-example"
 BUNDLE="Example.app"
-SPARKLE_VERSION="2.5.1"
+SPARKLE_VERSION="2.7.0"
 
 # Build Go app.
 CGO_LDFLAGS='-Wl,-rpath,@loader_path/../Frameworks' go build -o $BUNDLE/Contents/MacOS/$BINARY .
